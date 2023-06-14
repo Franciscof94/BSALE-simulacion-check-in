@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Airplane } from './airplane.entity';
 
 @Entity()
@@ -19,11 +19,6 @@ export class Flight {
   landing_airport: string;
 
   @ManyToOne(() => Airplane)
+  @JoinColumn({ name: 'airplane_id' })
   airplane: Airplane;
 }
-
-
-
-
-
-

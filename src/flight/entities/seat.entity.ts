@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Airplane } from './airplane.entity';
 import { SeatType } from './seat_type.entity';
 
@@ -20,8 +20,16 @@ export class Seat {
   airplane_id: number;
 
   @ManyToOne(() => Airplane)
+  @JoinColumn({ name: 'airplane_id' })
   airplane: Airplane;
 
   @ManyToOne(() => SeatType)
+  @JoinColumn({ name: 'seat_type_id' })
   seat_type: SeatType;
 }
+
+
+
+
+
+
