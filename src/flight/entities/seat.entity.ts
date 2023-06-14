@@ -4,20 +4,20 @@ import { SeatType } from './seat_type.entity';
 
 @Entity()
 export class Seat {
-  @PrimaryGeneratedColumn()
-  seat_id: number;
+  @PrimaryGeneratedColumn({ name: 'seat_id' })
+  seatId: number;
 
-  @Column()
-  seat_column: string;
+  @Column({ name: 'seat_column' })
+  seatColumn: string;
 
-  @Column()
-  seat_row: number;
+  @Column({ name: 'seat_row' })
+  seatRow: number;
 
-  @Column()
-  seat_type_id: number;
+  @Column({ name: 'seat_type_id' })
+  seatTypeId: number;
 
-  @Column()
-  airplane_id: number;
+  @Column({ name: 'airplane_id' })
+  airplaneId: number;
 
   @ManyToOne(() => Airplane)
   @JoinColumn({ name: 'airplane_id' })

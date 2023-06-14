@@ -45,12 +45,11 @@ export class FlightController {
     return this.flightService.create(createFlightDto);
   }
 
-  @Get(':flight_id')
-  async findAll(@Param()  flight_id: number ) {
-
+  @Get(":flight_id")
+  async flightData(@Param() flight_id: number) {
     const flight = await this.flightRepository.findOne({
       where: {
-        flight_id: flight_id,
+        flightId: flight_id,
       },
     });
 
@@ -58,40 +57,44 @@ export class FlightController {
       return null;
     }
 
-    console.log(flight)
+ 
     const boarding_passes = await this.boardingPassRepository.find({
       where: {
-          flight_id: flight.flight_id
+        flightId: flight.flightId,
       },
-      relations: ['passenger'],
+      relations: ["passenger"],
       order: {
-        seat_type_id: 'ASC',
-        seat_id: 'ASC'
+        seatTypeId: "ASC",
+        seatId: "ASC",
       },
-  });
+    });
 
-  if (boarding_passes.length === 0) {
-    return null;
-}
+    if (boarding_passes.length === 0) {
+      return null;
+    }
+    console.log(flight)
 
- 
 
-  return 'gola'
-   
-  }
+   /*  const data: FlightData = {
+      flightId: flight.flight_id,
+      takeoffDateTime: flight.takeoff_date_time,
+      takeoffAirport: flight.takeoff_airport,
+      landingDateTime: flight.landing_date_time,
+      landingAirport: flight.landing_airport,
+      airplaneId: flight.airplane_id,
+      passengers: boarding_passes.map((boardingPass) => ({
+        passengerId: boardingPass.passenger.passenger_id,
+        dni: parseInt(boardingPass.passenger.dni),
+        name: boardingPass.passenger.name,
+        age: boardingPass.passenger.age,
+        country: boardingPass.passenger.country,
+        boardingPassId: boardingPass.boarding_pass_id,
+        purchaseId: boardingPass.purchase_id,
+        seatTypeId: boardingPass.seat_type_id,
+        seatId: boardingPass.seat_id,
+      })),
+    }; */
 
- /*  @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.flightService.findOne(+id);
-  } */
-
-  @Patch(":id")
-  update(@Param("id") id: string, @Body() updateFlightDto: UpdateFlightDto) {
-    return this.flightService.update(+id, updateFlightDto);
-  }
-
-  @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.flightService.remove(+id);
+    return "gola";
   }
 }

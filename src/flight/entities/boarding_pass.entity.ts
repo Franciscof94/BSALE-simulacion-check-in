@@ -7,23 +7,23 @@ import { SeatType } from './seat_type.entity';
 
 @Entity()
 export class BoardingPass {
-  @PrimaryGeneratedColumn()
-  boarding_pass_id: number;
+  @PrimaryGeneratedColumn({ name: 'boarding_pass_id' })
+  boardingPassId: number;
 
-  @Column()
-  purchase_id: number;
+  @Column({ name: 'purchase_id' })
+  purchaseId: number;
 
-  @Column()
-  passenger_id: number;
+  @Column({ name: 'passenger_id' })
+  passengerId: number;
 
-  @Column()
-  seat_type_id: number;
+  @Column({ name: 'seat_type_id' })
+  seatTypeId: number;
 
-  @Column({ nullable: true })
-  seat_id: number;
+  @Column({ name: 'seat_id', nullable: true })
+  seatId: number;
 
-  @Column()
-  flight_id: number;
+  @Column({ name: 'flight_id' })
+  flightId: number;
 
   @ManyToOne(() => Flight)
   @JoinColumn({ name: 'flight_id' })
@@ -43,5 +43,5 @@ export class BoardingPass {
 
   @ManyToOne(() => SeatType)
   @JoinColumn({ name: 'seat_type_id' })
-  seat_type: SeatType;
+  seatType: SeatType;
 }

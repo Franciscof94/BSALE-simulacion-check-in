@@ -3,8 +3,8 @@ import { Flight } from './flight.entity';
 
 @Entity()
 export class Airplane {
-  @PrimaryGeneratedColumn()
-  airplane_id: number;
+  @PrimaryGeneratedColumn({ name: 'airplane_id' })
+  airplaneId: number;
 
   @Column()
   name: string;

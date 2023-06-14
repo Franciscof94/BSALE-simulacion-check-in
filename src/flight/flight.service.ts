@@ -8,7 +8,7 @@ export class FlightService {
     return 'This action adds a new flight';
   }
 
-  findAll() {
+  flightData() {
     
 
     return `This action returns all flight`;

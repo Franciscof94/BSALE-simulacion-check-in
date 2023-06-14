@@ -3,8 +3,8 @@ import { Seat } from './seat.entity';
 
 @Entity()
 export class SeatType {
-  @PrimaryGeneratedColumn()
-  seat_type_id: number;
+  @PrimaryGeneratedColumn({ name: 'seat_type_id' })
+  seatTypeId: number;
 
   @Column()
   name: string;

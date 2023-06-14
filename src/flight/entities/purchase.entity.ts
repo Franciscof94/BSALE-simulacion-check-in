@@ -3,11 +3,11 @@ import { BoardingPass } from './boarding_pass.entity';
 
 @Entity()
 export class Purchase {
-  @PrimaryGeneratedColumn()
-  purchase_id: number;
+  @PrimaryGeneratedColumn({ name: 'purchase_id' })
+  purchaseId: number;
 
-  @Column()
-  purchase_date: number;
+  @Column({ name: 'purchase_date' })
+  purchaseDate: number;
 
   @OneToMany(() => BoardingPass, boardingPass => boardingPass.purchase)
   boardingPasses: BoardingPass[];

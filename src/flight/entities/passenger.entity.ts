@@ -3,8 +3,8 @@ import { BoardingPass } from './boarding_pass.entity';
 
 @Entity()
 export class Passenger {
-  @PrimaryGeneratedColumn()
-  passenger_id: number;
+  @PrimaryGeneratedColumn({ name: 'passenger_id' })
+  passengerId: number;
 
   @Column()
   dni: string;

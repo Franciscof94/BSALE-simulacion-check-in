@@ -3,20 +3,20 @@ import { Airplane } from './airplane.entity';
 
 @Entity()
 export class Flight {
-  @PrimaryGeneratedColumn()
-  flight_id: number;
+  @PrimaryGeneratedColumn({ name: 'flight_id' })
+  flightId: number;
 
-  @Column()
-  takeoff_date_time: number;
+  @Column({ name: 'takeoff_date_time' })
+  takeoffDateTime: number;
 
-  @Column()
-  takeoff_airport: string;
+  @Column({ name: 'takeoff_airport' })
+  takeoffAirport: string;
 
-  @Column()
-  landing_date_time: number;
+  @Column({ name: 'landing_date_time' })
+  landingDateTime: number;
 
-  @Column()
-  landing_airport: string;
+  @Column({ name: 'landing_airport' })
+  landingAirport: string;
 
   @ManyToOne(() => Airplane)
   @JoinColumn({ name: 'airplane_id' })
