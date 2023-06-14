@@ -19,6 +19,7 @@ import { Passenger } from "./entities/passenger.entity";
 import { Purchase } from "./entities/purchase.entity";
 import { SeatType } from "./entities/seat_type.entity";
 import { Seat } from "./entities/seat.entity";
+import { FlightData } from "./interfaces";
 
 @Controller("flight")
 export class FlightController {
@@ -75,25 +76,25 @@ export class FlightController {
     console.log(flight)
 
 
-   /*  const data: FlightData = {
-      flightId: flight.flight_id,
-      takeoffDateTime: flight.takeoff_date_time,
-      takeoffAirport: flight.takeoff_airport,
-      landingDateTime: flight.landing_date_time,
-      landingAirport: flight.landing_airport,
-      airplaneId: flight.airplane_id,
+    const data: FlightData = {
+      flightId: flight.flightId,
+      takeoffDateTime: flight.takeoffDateTime,
+      takeoffAirport: flight.takeoffAirport,
+      landingDateTime: flight.landingDateTime,
+      landingAirport: flight.landingAirport,
+      airplaneId: flight.airplaneId,
       passengers: boarding_passes.map((boardingPass) => ({
-        passengerId: boardingPass.passenger.passenger_id,
+        passengerId: boardingPass.passenger.passengerId,
         dni: parseInt(boardingPass.passenger.dni),
         name: boardingPass.passenger.name,
         age: boardingPass.passenger.age,
         country: boardingPass.passenger.country,
-        boardingPassId: boardingPass.boarding_pass_id,
-        purchaseId: boardingPass.purchase_id,
-        seatTypeId: boardingPass.seat_type_id,
-        seatId: boardingPass.seat_id,
+        boardingPassId: boardingPass.boardingPassId,
+        purchaseId: boardingPass.purchaseId,
+        seatTypeId: boardingPass.seatTypeId,
+        seatId: boardingPass.seatId,
       })),
-    }; */
+    };
 
     return "gola";
   }
