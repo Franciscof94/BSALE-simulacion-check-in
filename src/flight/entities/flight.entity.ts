@@ -18,7 +18,10 @@ export class Flight {
   @Column({ name: 'landing_airport' })
   landingAirport: string;
 
+  @Column({ name: 'airplane_id' }) // Agrega esta línea para almacenar el ID del avión
+  airplaneId: number;
+
   @ManyToOne(() => Airplane)
-  @JoinColumn({ name: 'airplane_id' })
+  @JoinColumn({ name: 'airplane_id', referencedColumnName: 'airplaneId' }) // Cambia 'airplane_id' por 'airplaneId'
   airplane: Airplane;
 }

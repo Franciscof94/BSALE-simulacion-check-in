@@ -9,6 +9,6 @@ export class Airplane {
   @Column()
   name: string;
 
-  @OneToMany(() => Flight, flight => flight.airplane)
+  @OneToMany(() => Flight, flight => flight.airplaneId) // Cambia 'flight.airplane' por 'flight.airplaneId'
   flights: Flight[];
 }

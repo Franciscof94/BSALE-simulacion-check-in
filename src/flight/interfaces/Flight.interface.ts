@@ -1,15 +1,15 @@
 
-export interface FlightData {
+export interface IFlightData {
     flightId: number;
     takeoffDateTime: number;
     takeoffAirport: string;
     landingDateTime: number;
     landingAirport: string;
     airplaneId: number;
-    passengers: Passenger[];
+    passengers: IPassenger[];
 }
 
-export interface Passenger {
+export interface IPassenger {
     passengerId: number;
     dni: number;
     name: string;
