@@ -1,21 +1,24 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-} from "@nestjs/common";
+import { Controller, Get, Param, Res, HttpStatus } from "@nestjs/common";
 import { FlightService } from "./flight.service";
-import { CreateFlightDto } from "./dto/create-flight.dto";
-
 @Controller("flights")
 export class FlightController {
   constructor(private readonly flightService: FlightService) {}
 
-
   @Get(":id/passengers")
-  async findOne(@Param() params: { id: number }) {
-    const { id } = params;
-    return this.flightService.seatsDistribution(id);
+  async findOne(@Param() params: { id: number }, @Res() res) {
+    try {
+      const { id } = params;
+      const data = await this.flightService.seatsDistribution(id);
+
+      if (data == null) {
+        return res.status(HttpStatus.NOT_FOUND).send({ code: 404, data: {} });
+      }
+
+      return res.status(HttpStatus.OK).send({ code: 200, data });
+    } catch (error) {
+      return res
+        .status(HttpStatus.BAD_REQUEST)
+        .send({ code: 400, errors: "could not connect to db" });
+    }
   }
 }
