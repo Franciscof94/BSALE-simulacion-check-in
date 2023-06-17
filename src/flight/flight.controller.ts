@@ -1,10 +1,11 @@
-import { Controller, Get, Param, Res, HttpStatus } from "@nestjs/common";
+import { Controller, Get, Param, Res, HttpStatus, Redirect } from "@nestjs/common";
 import { FlightService } from "./flight.service";
 @Controller("flights")
 export class FlightController {
   constructor(private readonly flightService: FlightService) {}
 
   @Get(":id/passengers")
+  @Redirect(':flightId/passengers', 302)
   async findOne(@Param() params: { id: number }, @Res() res) {
     try {
       const { id } = params;
