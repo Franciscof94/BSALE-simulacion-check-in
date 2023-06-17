@@ -132,5 +132,5 @@ http://localhost:PORT/flights/id/passengers
 ## Demo
 Para el despliegue del proyecto se utilizó Railway.
 
-[![Deploy with Vercel](https://railway.app/)](https://bsale-simulacion-check-in-production.up.railway.app/flights/1/passengers)
+[![Deploy with Railway](https://railway.app/)](https://bsale-simulacion-check-in-production.up.railway.app/flights/1/passengers)
 
