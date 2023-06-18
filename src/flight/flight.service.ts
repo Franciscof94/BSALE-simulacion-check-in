@@ -18,13 +18,13 @@ export class FlightService {
     private readonly seatRepository: Repository<Seat>,
   ) {}
 
+  // Crea un vuelo
   create(createFlightDto: CreateFlightDto) {
     return "";
   }
 
+  // Obtiene los datos de un vuelo en formato CamelCase según su ID
   async flightData(flight_id: number): Promise<IFlightData | null> {
-    // Retorna los datos de un vuelo en formato CamelCase, dado su ID.
-    // @param flight_id El ID del vuelo.
     const flight = await this.flightRepository.findOne({
       where: {
         flightId: flight_id,
@@ -73,8 +73,8 @@ export class FlightService {
     return data;
   }
 
+  // Obtiene una lista de todas las sillas ordenadas por ID
   async seatsList(): Promise<Seat[]> {
-    // Retorna una lista de todas las sillas ordenadas por id
     const seatsList = await this.seatRepository.find({
       order: {
         seatId: "ASC",
@@ -83,6 +83,7 @@ export class FlightService {
     return seatsList;
   }
 
+  // Obtiene los IDs de las sillas ocupadas según la lista de pasajeros
   async occupiedSeatsId(passengersList: IPassenger[]): Promise<number[]> {
     const occupiedSeatsId: number[] = passengersList
       .filter((passenger) => passenger.seatId !== null)
@@ -91,6 +92,7 @@ export class FlightService {
     return occupiedSeatsId;
   }
 
+  // Encuentra los IDs de los tipos de asientos disponibles para un tipo de asiento específico en un vuelo
   async findAvailableSeatTypeIds(
     seatTypeId: number,
     flight_data: IFlightData,
@@ -114,10 +116,12 @@ export class FlightService {
     return seatAvailableTypeIdList;
   }
 
+  // Encuentra una silla específica según su ID en una lista de sillas
   async findSeat(seatId: number, seats: Seat[]): Promise<Seat> {
     return seats.find((seat) => seat.seatId === seatId);
   }
 
+  // Encuentra una silla adyacente en una lista de sillas
   async findAdjacentSeat(
     seats: Seat[],
     columnOffset: number,
@@ -133,6 +137,7 @@ export class FlightService {
     return adjacentSeat ? adjacentSeat.seatId : null;
   }
 
+  // Distribuye los asientos para un vuelo específico
   async seatsDistribution(flight_id: number) {
     let data: IFlightData = await this.flightData(flight_id);
 
@@ -141,7 +146,6 @@ export class FlightService {
     }
 
     let seatsData = await this.seatsList();
-
 
     let availableSeatsIds = {
       1: await this.findAvailableSeatTypeIds(1, data),
@@ -154,9 +158,8 @@ export class FlightService {
     let listOfEmptySeatIds: number[];
 
     for (const passenger of passengers) {
-
+      // Si el pasajero es menor de 18 años y no tiene asignada una silla
       if (passenger.age < 18 && passenger.seatId === null) {
-        
         const companions: IPassenger[] = passengers.filter(
           (companion) =>
             companion.purchaseId === passenger.purchaseId &&
@@ -165,22 +168,16 @@ export class FlightService {
             companion.age >= 18,
         );
 
+        listOfEmptySeatIds = availableSeatsIds[passenger.seatTypeId];
 
-
-
-        const seatTypeId = passenger.seatTypeId;
-        listOfEmptySeatIds = availableSeatsIds[seatTypeId];
-
+        // Asigna asientos a los acompañantes
         for (const companion of companions) {
           const seat_id = listOfEmptySeatIds.shift();
-
-
           if (seat_id != null) {
             [passenger.seatId, companion.seatId] = [seat_id, seat_id];
           }
         }
-
-        availableSeatsIds[seatTypeId] = listOfEmptySeatIds;
+        availableSeatsIds[passenger.seatTypeId] = listOfEmptySeatIds;
       }
     }
 
@@ -200,57 +197,53 @@ export class FlightService {
         if (companions) {
           for (const companion of companions) {
             if (passengers[passengers.indexOf(companion)]["seatId"] == null) {
-              for (const seat_id of listOfEmptySeatIds) {
+              const seatPositions = {
+                left: await this.findAdjacentSeat(seatsData, -1, 0),
+                right: await this.findAdjacentSeat(seatsData, 1, 0),
+                front: await this.findAdjacentSeat(seatsData, 0, 1),
+                back: await this.findAdjacentSeat(seatsData, 0, -1),
+                northeast: await this.findAdjacentSeat(seatsData, 1, 1),
+                southeast: await this.findAdjacentSeat(seatsData, 1, -1),
+                northwest: await this.findAdjacentSeat(seatsData, -1, 1),
+                southwest: await this.findAdjacentSeat(seatsData, -1, -1),
+              };
 
-                const seatPositions = {
-                  left: this.findAdjacentSeat(seatsData, -1, 0),
-                  right: this.findAdjacentSeat(seatsData, 1, 0),
-                  front: this.findAdjacentSeat(seatsData, 0, 1),
-                  back: this.findAdjacentSeat(seatsData, 0, -1),
-                  northeast: this.findAdjacentSeat(seatsData, 1, 1),
-                  southeast: this.findAdjacentSeat(seatsData, 1, -1),
-                  northwest: this.findAdjacentSeat(seatsData, -1, 1),
-                  southwest: this.findAdjacentSeat(seatsData, -1, -1),
-                };
-
-                function assignSeat(passenger, seatId) {
-                  if (passenger.seatId === null) {
-                    passenger.seatId = seatId;
-                    listOfEmptySeatIds.splice(
-                      listOfEmptySeatIds.indexOf(seatId),
-                      1,
-                    );
-                  }
+              // Función para asignar un asiento a un pasajero
+              const assignSeat = (passenger, seatId) => {
+                if (passenger.seatId === null) {
+                  passenger.seatId = seatId;
+                  listOfEmptySeatIds = listOfEmptySeatIds.filter(
+                    (id) => id !== seatId,
+                  );
                 }
+              };
 
-                for (const position in seatPositions) {
-                  const seatId = seatPositions[position];
-                  if (
-                    seatId != null &&
-                    listOfEmptySeatIds.includes(seatId)
-                  ) {
-                    assignSeat(passenger, seat_id);
-                    assignSeat(
-                      passengers[passengers.indexOf(companion)],
-                      seatId,
-                    );
-                    listOfEmptySeatIds.splice(
-                      listOfEmptySeatIds.indexOf(seatId),
-                      1,
-                    );
-                    assigned = true;
-                    break;
-                  }
-                }
+              // Encuentra el ID de un asiento disponible en las posiciones adyacentes
+              const availableSeatId = Object.values(seatPositions).find(
+                (seatId) =>
+                  seatId != null && listOfEmptySeatIds.includes(seatId),
+              );
+
+              if (availableSeatId) {
+                assignSeat(passenger, availableSeatId);
+                assignSeat(
+                  passengers[passengers.indexOf(companion)],
+                  availableSeatId,
+                );
+                listOfEmptySeatIds.splice(
+                  listOfEmptySeatIds.indexOf(availableSeatId),
+                  1,
+                );
+                assigned = true;
               }
             }
-            availableSeatsIds[passenger.seatTypeId] =
-              listOfEmptySeatIds;
+            availableSeatsIds[passenger.seatTypeId] = listOfEmptySeatIds;
           }
         }
       }
     }
 
+    // Asigna los asientos restantes a los pasajeros
     for (const passenger of passengers) {
       listOfEmptySeatIds = availableSeatsIds[passenger.seatTypeId];
       if (passenger.seatId == null) {
@@ -260,7 +253,7 @@ export class FlightService {
       }
     }
 
-    data["passengers"] = passengers;
+    data.passengers = passengers;
 
     return data;
   }
