@@ -5,7 +5,6 @@ export class FlightController {
   constructor(private readonly flightService: FlightService) {}
 
   @Get(":id/passengers")
-  @Redirect(':flightId/passengers', 302)
   async findOne(@Param() params: { id: number }, @Res() res) {
     try {
       const { id } = params;
